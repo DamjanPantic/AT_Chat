@@ -47,6 +47,7 @@
             <b-form-textarea v-model="message.content" placeholder="Message Text.." rows="4" max-rows="4" class="mt-2" />
             <b-row class="mt-4">
               <b-col align="right" class="mr-4">
+                <b-button @click="getMessages" class="mr-2" variant="outline-danger">Messages</b-button>
                 <b-button squared @click="sendMessageToAll">Send to All</b-button>
                 <b-button pill class="ml-2" variant="primary" @click="sendMessageToUser" :disabled="message.reciver == ''">Send</b-button>
               </b-col>
@@ -106,14 +107,6 @@ export default {
     },
     selectUser(user){
       this.message.reciver = user;
-      axios
-        .get("messages/" + this.$store.state.user.username)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
     },
     sendMessageToAll(){
       if (this.message.reciver == "") {
@@ -136,6 +129,16 @@ export default {
         .then(() => {
           this.message.subject = "";
           this.message.content = "";
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    getMessages(){
+      axios
+        .get("messages/" + this.$store.state.user.username)
+        .then(response => {
+          console.log(response.data);
         })
         .catch(e => {
           console.log(e);

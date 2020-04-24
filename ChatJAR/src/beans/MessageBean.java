@@ -38,12 +38,13 @@ public class MessageBean {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid message").build();
 		}
 			
+		message.setReciver(null);
+		
 		for (User user: data.getAllUsers().values()) {
-			message.setReciver(user);
 			user.getMessages().add(message);
-			System.out.println(message + " is snet [ALL]");
 		}
 		
+		System.out.println(message + " is snet [ALL]");
 		
 		return Response.status(Response.Status.OK).build();
 	}
@@ -67,8 +68,10 @@ public class MessageBean {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Invalid reciver").build();
 		}
 
-		sender.getMessages().add(message);
-		reciver.getMessages().add(message);
+		if (!sender.getUsername().equals(reciver.getUsername())) {
+			data.getAllUsers().get(message.getSender().getUsername()).getMessages().add(message);
+		}
+		data.getAllUsers().get(message.getReciver().getUsername()).getMessages().add(message);
 		
 		System.out.println(message + " is snet");
 		
