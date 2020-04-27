@@ -23,6 +23,7 @@ export default {
         .delete("users/loggedIn/" + this.$store.state.user.username)
         .then(() => {
           this.$store.state.user = null;
+          sessionStorage.removeItem('username');
           this.$router.push("/login");
         })
         .catch(e => {

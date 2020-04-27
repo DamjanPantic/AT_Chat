@@ -28,7 +28,7 @@ public class MessageBean {
 	@Path("/all")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sendMessageAll(Message message) {
-		User sender = data.login(message.getSender());
+		User sender = data.getActiveUsers().get(message.getSender().getUsername());
 		
 		if (sender == null){
 			return Response.status(Response.Status.BAD_REQUEST).entity("User is not logged in").build();
@@ -53,7 +53,7 @@ public class MessageBean {
 	@Path("/user")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sendMessageUser(Message message) {
-		User sender = data.login(message.getSender());
+		User sender = data.getActiveUsers().get(message.getSender().getUsername());
 		User reciver = data.getAllUsers().get(message.getReciver().getUsername());
 		
 		if (sender == null){

@@ -69,8 +69,19 @@ export default {
     }
   },
   mounted() {
-    if (this.$store.state.user) {
-      this.$router.push("/");
+    var loggedUsername = sessionStorage.getItem('username');
+    if (loggedUsername) {
+      this.$store.state.user = {}
+      this.$store.state.user.username = loggedUsername;
+      axios
+        .get("messages/" + loggedUsername)
+        .then(response => {
+          this.$store.state.user.messages = response.data;
+          this.$router.push("/");
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   }
 };
