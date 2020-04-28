@@ -34,7 +34,7 @@
               style="position:relative; overflow-y:auto; height:32em"
               id="messageBox"
             >
-              <div v-for="message in chatMessages" :key="message.date" >
+              <div v-for="message in chatMessages" :key="message.date">
                 <b-card
                   bg-variant="primary"
                   text-variant="white"
@@ -220,6 +220,7 @@ export default {
     } else {
       this.$store.state.user = { username: "", messages: [] };
       this.$store.state.user.username = loggedUsername;
+
       axios
         .get("messages/" + loggedUsername)
         .then(response => {
@@ -228,6 +229,7 @@ export default {
         .catch(e => {
           console.log(e);
         });
+
       axios
         .get("users/loggedIn")
         .then(response => {
@@ -237,6 +239,20 @@ export default {
         .catch(e => {
           console.log(e);
         });
+
+      var vue = this;
+
+      this.socket = new WebSocket(
+        `ws://localhost:8080/ChatWAR/ws`
+      );
+
+      // this.socket.onopen = function(event) {
+      // };
+
+      this.socket.onmessage = function(event) {
+        vue.users = JSON.parse(event.data);
+        console.log(JSON.parse(event.data));
+      };
     }
   },
   components: {

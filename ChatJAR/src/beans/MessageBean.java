@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import model.Message;
 import model.User;
+import ws.WSEndPoint;
 
 @Stateless
 @Path("/messages")
@@ -23,11 +24,14 @@ public class MessageBean {
 	
 	@EJB
 	private DataLocal data;
+	
+	@EJB
+	WSEndPoint ws;
 
 	@POST
 	@Path("/all")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response sendMessageAll(Message message) {
+	public Response sendMessageAll(Message message){
 		User sender = data.getActiveUsers().get(message.getSender().getUsername());
 		
 		if (sender == null){
