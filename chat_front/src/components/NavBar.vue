@@ -5,7 +5,7 @@
       <b-icon icon="chat"></b-icon>
     </router-link>
     <b-navbar-nav class="ml-auto">
-      <b-nav-item v-if="this.$store.state.user" @click="logoutUser">
+      <b-nav-item v-if="this.$store.state.user.username!= ''" @click="logoutUser">
         Logout
         <b-icon icon="person-dash"></b-icon>
       </b-nav-item>
@@ -22,7 +22,7 @@ export default {
       axios
         .delete("users/loggedIn/" + this.$store.state.user.username)
         .then(() => {
-          this.$store.state.user = null;
+          this.$store.state.user = {username: '', messages: []};
           sessionStorage.removeItem('username');
           this.$router.push("/login");
         })
@@ -30,7 +30,7 @@ export default {
           console.log(e);
         });
     }
-  }
+  },
 };
 </script>
 

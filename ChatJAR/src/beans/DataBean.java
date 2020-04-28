@@ -67,7 +67,7 @@ public class DataBean implements DataLocal{
 					return null;
 				}
 			}
-			return activeUsers.put(user.getUsername(), user);
+			return allUsers.get(username);
 		}
 		return null;
 	}

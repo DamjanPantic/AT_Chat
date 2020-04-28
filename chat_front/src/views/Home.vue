@@ -30,26 +30,69 @@
           <b-col>
             <b-card
               border-variant="primary"
-              class="text-center mt-1"
+              class="mt-1"
               style="position:relative; overflow-y:auto; height:32em"
-            ></b-card>
+              id="messageBox"
+            >
+              <div v-for="message in chatMessages" :key="message.date" >
+                <b-card
+                  bg-variant="primary"
+                  text-variant="white"
+                  class="text-center ml-auto mb-2"
+                  style="max-width: 65%"
+                  v-if="message.sender.username == $store.state.user.username"
+                >
+                  <template v-slot:header v-if="message.subject != ''">{{message.subject}}</template>
+                  <b-card-text>{{message.content}}</b-card-text>
+                </b-card>
+                <b-card
+                  bg-variant="secondary"
+                  text-variant="white"
+                  class="text-center mb-2"
+                  style="max-width: 65%"
+                  v-else
+                >
+                  <template v-slot:header v-if="message.subject != ''">{{message.subject}}</template>
+                  <b-card-text>{{message.content}}</b-card-text>
+                </b-card>
+              </div>
+            </b-card>
           </b-col>
         </b-row>
         <b-row class="mt-5">
           <b-col>
             <b-form-select v-model="message.reciver">
               <template v-slot:first>
-                <b-form-select-option value="" disabled>Reciver..</b-form-select-option>
+                <b-form-select-option value disabled>Reciver..</b-form-select-option>
               </template>
-              <b-form-select-option :value="user" v-for="user in users" :key="user.username">{{user.username}}</b-form-select-option>
+              <b-form-select-option :value="user" v-for="user in users" :key="user.username">
+                {{user.username}}
+                <span v-if="$store.state.user.username == user.username">(ME)</span>
+              </b-form-select-option>
             </b-form-select>
-            <b-form-input v-model="message.subject" type="text" placeholder="Subject.." class="mt-2" />
-            <b-form-textarea v-model="message.content" placeholder="Message Text.." rows="4" max-rows="4" class="mt-2" />
+            <b-form-input
+              v-model="message.subject"
+              type="text"
+              placeholder="Subject.."
+              class="mt-2"
+            />
+            <b-form-textarea
+              v-model="message.content"
+              placeholder="Message Text.."
+              rows="4"
+              max-rows="4"
+              class="mt-2"
+            />
             <b-row class="mt-4">
               <b-col align="right" class="mr-4">
-                <b-button @click="getMessages" class="mr-2" variant="outline-danger">Messages</b-button>
                 <b-button squared @click="sendMessageToAll">Send to All</b-button>
-                <b-button pill class="ml-2" variant="primary" @click="sendMessageToUser" :disabled="message.reciver == ''">Send</b-button>
+                <b-button
+                  pill
+                  class="ml-2"
+                  variant="primary"
+                  @click="sendMessageToUser"
+                  :disabled="message.reciver == ''"
+                >Send</b-button>
               </b-col>
             </b-row>
           </b-col>
@@ -74,11 +117,38 @@ export default {
       usersType: "active",
       message: {
         sender: this.$store.state.user,
-        reciver: "",
+        reciver: this.$store.state.user,
         subject: "",
         content: ""
-      },
+      }
     };
+  },
+  computed: {
+    chatMessages() {
+      let usermessages = [];
+
+      this.$store.state.user.messages.forEach(message => {
+        if (this.message.reciver.username === this.$store.state.user.username) {
+          if (
+            message.sender.username === this.message.reciver.username &&
+            message.reciver.username === this.message.reciver.username
+          ) {
+            usermessages.push(message);
+          }
+        } else if (
+          message.sender.username === this.message.reciver.username ||
+          message.reciver.username === this.message.reciver.username
+        ) {
+          if (
+            this.message.reciver.username !== this.$store.state.user.username
+          ) {
+            usermessages.push(message);
+          }
+        }
+      });
+
+      return usermessages;
+    }
   },
   methods: {
     getAllUsers() {
@@ -86,7 +156,7 @@ export default {
         .get("users/registered")
         .then(response => {
           this.users = response.data;
-          this.usersType = "all"
+          this.usersType = "all";
           this.message.reciver = "";
         })
         .catch(e => {
@@ -98,19 +168,23 @@ export default {
         .get("users/loggedIn")
         .then(response => {
           this.users = response.data;
-          this.usersType = "active"
+          this.usersType = "active";
           this.message.reciver = "";
         })
         .catch(e => {
           console.log(e);
         });
     },
-    selectUser(user){
+    selectUser(user) {
       this.message.reciver = user;
+      this.$nextTick(() => {
+        var container = document.getElementById("messageBox");
+        container.scrollTop = container.scrollHeight;
+      });
     },
-    sendMessageToAll(){
+    sendMessageToAll() {
       if (this.message.reciver == "") {
-        this.message.reciver = {}
+        this.message.reciver = {};
       }
       axios
         .post("messages/all", this.message)
@@ -123,7 +197,7 @@ export default {
           console.log(e);
         });
     },
-    sendMessageToUser(){
+    sendMessageToUser() {
       axios
         .post("messages/user", this.message)
         .then(() => {
@@ -134,26 +208,31 @@ export default {
           console.log(e);
         });
     },
-    getMessages(){
+    scrolltoBottom() {
+      var container = document.getElementById("messageBox");
+      container.scrollTop = container.scrollHeight;
+    }
+  },
+  mounted() {
+    var loggedUsername = sessionStorage.getItem("username");
+    if (!loggedUsername) {
+      this.$router.push("/login");
+    } else {
+      this.$store.state.user = { username: "", messages: [] };
+      this.$store.state.user.username = loggedUsername;
       axios
-        .get("messages/" + this.$store.state.user.username)
+        .get("messages/" + loggedUsername)
         .then(response => {
-          console.log(response.data);
+          this.$store.state.user.messages = response.data;
         })
         .catch(e => {
           console.log(e);
         });
-    }
-  },
-  mounted() {
-    if (!this.$store.state.user) {
-      this.$router.push("/login");
-    }else{
       axios
         .get("users/loggedIn")
         .then(response => {
           this.users = response.data;
-          this.usersType = "active"
+          this.usersType = "active";
         })
         .catch(e => {
           console.log(e);
