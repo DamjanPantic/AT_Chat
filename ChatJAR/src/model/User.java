@@ -2,7 +2,12 @@ package model;
 
 import java.util.ArrayList;
 
-public class User {
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+
+@Stateful
+@Remote(Agent.class)
+public class User implements Agent{
 
 	private String username;
 	private String password;
@@ -58,5 +63,10 @@ public class User {
 	@Override
 	public String toString() {
 		return "User[username: " + username + "]";
+	}
+
+	@Override
+	public void handleMessage(Message message) {
+		this.messages.add(message);
 	}
 }

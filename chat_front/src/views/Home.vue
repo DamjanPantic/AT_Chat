@@ -116,8 +116,8 @@ export default {
       users: [],
       usersType: "active",
       message: {
-        sender: this.$store.state.user,
-        reciver: this.$store.state.user,
+        sender: {},
+        reciver: {},
         subject: "",
         content: ""
       }
@@ -126,22 +126,27 @@ export default {
   computed: {
     chatMessages() {
       let usermessages = [];
+      var loggedUsername = sessionStorage.getItem("username");
 
       this.$store.state.user.messages.forEach(message => {
-        if (this.message.reciver.username === this.$store.state.user.username) {
-          if (
-            message.sender.username === this.message.reciver.username &&
+        if (message.reciver) {
+          if (this.message.reciver.username === loggedUsername) {
+            if (
+              message.sender.username === this.message.reciver.username &&
+              message.reciver.username === this.message.reciver.username
+            ) {
+              usermessages.push(message);
+            }
+          } else if (
+            message.sender.username === this.message.reciver.username ||
             message.reciver.username === this.message.reciver.username
           ) {
-            usermessages.push(message);
+            if (this.message.reciver.username !== loggedUsername) {
+              usermessages.push(message);
+            }
           }
-        } else if (
-          message.sender.username === this.message.reciver.username ||
-          message.reciver.username === this.message.reciver.username
-        ) {
-          if (
-            this.message.reciver.username !== this.$store.state.user.username
-          ) {
+        } else{
+          if (this.message.reciver.username === message.sender.username) {
             usermessages.push(message);
           }
         }
@@ -151,12 +156,13 @@ export default {
     },
     usersToShow() {
       var usersTemp = [];
-      var temp = this.users
+      var temp = this.users;
+      var loggedUsername = sessionStorage.getItem("username");
 
       temp.sort(this.compare).forEach(user => {
-        if (user.username !== this.$store.state.user.username) {
+        if (user.username !== loggedUsername) {
           usersTemp.push(user);
-        }else{
+        } else {
           usersTemp.unshift(user);
         }
       });
@@ -171,7 +177,6 @@ export default {
         .then(response => {
           this.users = response.data;
           this.usersType = "all";
-          this.message.reciver = "";
         })
         .catch(e => {
           console.log(e);
@@ -183,7 +188,6 @@ export default {
         .then(response => {
           this.users = response.data;
           this.usersType = "active";
-          this.message.reciver = "";
         })
         .catch(e => {
           console.log(e);
@@ -197,6 +201,9 @@ export default {
       });
     },
     sendMessageToAll() {
+      var loggedUsername = sessionStorage.getItem("username");
+      this.message.sender = { username: loggedUsername };
+
       if (this.message.reciver == "") {
         this.message.reciver = {};
       }
@@ -212,6 +219,8 @@ export default {
         });
     },
     sendMessageToUser() {
+      var loggedUsername = sessionStorage.getItem("username");
+      this.message.sender = { username: loggedUsername };
       axios
         .post("messages/user", this.message)
         .then(() => {
@@ -243,6 +252,8 @@ export default {
     } else {
       this.$store.state.user = { username: "", messages: [] };
       this.$store.state.user.username = loggedUsername;
+
+      this.message.sender = { username: loggedUsername };
 
       axios
         .get("messages/" + loggedUsername)
