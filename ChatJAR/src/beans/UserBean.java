@@ -44,6 +44,18 @@ public class UserBean {
 		}
 
 		System.out.println(user + " is regitered");
+		
+		try {
+
+			ObjectMapper mapper = new ObjectMapper();
+			String action = "all:";
+			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
+			ws.echoTextMessage(action+jsonMessage);
+
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
 
 		return Response.status(Response.Status.OK).build();
 	}
@@ -65,8 +77,9 @@ public class UserBean {
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
+			String action = "active:";
 			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-			ws.echoTextMessage(jsonMessage);
+			ws.echoTextMessage(action+jsonMessage);
 
 		} catch (JsonProcessingException e) {
 
@@ -92,8 +105,9 @@ public class UserBean {
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
+			String action = "active:";
 			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-			ws.echoTextMessage(jsonMessage);
+			ws.echoTextMessage(action+jsonMessage);
 
 		} catch (JsonProcessingException e) {
 

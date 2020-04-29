@@ -11,7 +11,7 @@
           <b-card
             border-variant="primary"
             class="text-center mt-1"
-            v-for="user in users"
+            v-for="user in usersToShow"
             :key="user.username"
             @click="selectUser(user)"
             :bg-variant="(message.reciver.username == user.username)? 'primary':'none'"
@@ -65,7 +65,7 @@
               <template v-slot:first>
                 <b-form-select-option value disabled>Reciver..</b-form-select-option>
               </template>
-              <b-form-select-option :value="user" v-for="user in users" :key="user.username">
+              <b-form-select-option :value="user" v-for="user in usersToShow" :key="user.username">
                 {{user.username}}
                 <span v-if="$store.state.user.username == user.username">(ME)</span>
               </b-form-select-option>
@@ -148,6 +148,20 @@ export default {
       });
 
       return usermessages;
+    },
+    usersToShow() {
+      var usersTemp = [];
+      var temp = this.users
+
+      temp.sort(this.compare).forEach(user => {
+        if (user.username !== this.$store.state.user.username) {
+          usersTemp.push(user);
+        }else{
+          usersTemp.unshift(user);
+        }
+      });
+
+      return usersTemp;
     }
   },
   methods: {
@@ -211,6 +225,15 @@ export default {
     scrolltoBottom() {
       var container = document.getElementById("messageBox");
       container.scrollTop = container.scrollHeight;
+    },
+    compare(a, b) {
+      if (a.username < b.username) {
+        return -1;
+      }
+      if (a.username > b.username) {
+        return 1;
+      }
+      return 0;
     }
   },
   mounted() {
@@ -242,16 +265,18 @@ export default {
 
       var vue = this;
 
-      this.socket = new WebSocket(
-        `ws://localhost:8080/ChatWAR/ws`
-      );
+      this.socket = new WebSocket(`ws://localhost:8080/ChatWAR/ws`);
 
       // this.socket.onopen = function(event) {
       // };
 
       this.socket.onmessage = function(event) {
-        vue.users = JSON.parse(event.data);
-        console.log(JSON.parse(event.data));
+        var wsMessages = event.data.split(/:(.+)/);
+        var action = wsMessages[0];
+        var data = wsMessages[1];
+        if (action == vue.usersType) {
+          vue.users = JSON.parse(data);
+        }
       };
     }
   },
