@@ -30,9 +30,9 @@ import util.NodeManager;
 @Path("/connection")
 public class ConnectionManagerBean implements ConnectionManager {
 	
-	private String nodeAddr;
-	private String nodeName = null;
 	private String master = null;
+	private String nodeName = "0ccaf5f9.ngrok.io";
+	private String nodeAddr;
 	private List<String> connections = new ArrayList<String>();
 	
 	@EJB DataLocal data;
@@ -40,12 +40,12 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@PostConstruct
 	private void init() {
 		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
-			this.nodeAddr = (String) mBeanServer.getAttribute(http, "boundAddress");
-			this.nodeName = NodeManager.getNodeName() + ":8080";
-			
-			System.out.println("nodeAddr: " + nodeAddr + "; nodeName: " + nodeName);
+//			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+//			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
+//			this.nodeAddr = (String) mBeanServer.getAttribute(http, "boundAddress");
+//			this.nodeName = NodeManager.getNodeName() + ":8080";
+//			
+//			System.out.println("nodeAddr: " + nodeAddr + "; nodeName: " + nodeName);
 
 			if (master != null && !master.equals("")) {
 				ResteasyClient client = new ResteasyClientBuilder().build();
