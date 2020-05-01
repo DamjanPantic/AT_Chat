@@ -36,7 +36,7 @@ public interface ConnectionManager {
 	@POST
 	@Path("/users/loggedIn")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allLoggedInUsers(Collection<User> users);
+	public  void allLoggedInUsersPost(Collection<User> users);
 	
 	@GET
 	@Path("/users/loggedIn")
@@ -46,7 +46,7 @@ public interface ConnectionManager {
 	@POST
 	@Path("/users/registered")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allRegisteredUsers(Collection<User> users);
+	public  void allRegisteredUsersPost(Collection<User> users);
 	
 	@GET
 	@Path("/users/registered")

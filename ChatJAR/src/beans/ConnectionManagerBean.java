@@ -36,7 +36,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 	private String nodeAddr;
 	private List<String> connections = new ArrayList<String>();
 	
-	@EJB DataLocal data;
+	@EJB
+	private DataLocal data;
 
 	@PostConstruct
 	private void init() {
@@ -115,7 +116,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 
 	@Override
-	public void allLoggedInUsers(Collection<User> users) {
+	public void allLoggedInUsersPost(Collection<User> users) {
 		for (User user : users) {
 			this.data.getActiveUsers().put(user.getUsername(), user);
 		}
@@ -128,7 +129,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 
 	@Override
-	public void allRegisteredUsers(Collection<User> users) {
+	public void allRegisteredUsersPost(Collection<User> users) {
 
 		for (User user : users) {
 			this.data.getAllUsers().put(user.getUsername(), user);
