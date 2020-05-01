@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +38,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	private List<String> connections = new ArrayList<String>();
 	
 	@EJB
-	private DataLocal data;
+	private DataBean data;
 
 	@PostConstruct
 	private void init() {
@@ -57,13 +58,13 @@ public class ConnectionManagerBean implements ConnectionManager {
 				this.connections.remove(this.nodeName);
 				this.connections.add(this.master);
 				
-				Collection<User> activeUsers = rest.allLoggedInUsers();
-				for (User user : activeUsers) {
+				data.setActiveUsers(rest.allLoggedInUsers());
+				for (User user : data.getActiveUsers().values()) {
 					this.data.getActiveUsers().put(user.getUsername(), user);
 				}
 				
-				Collection<User> allUsers = rest.allRegisteredUsers();
-				for (User user : allUsers) {
+				data.setAllUsers(rest.allRegisteredUsers());
+				for (User user : data.getAllUsers().values()) {
 					this.data.getAllUsers().put(user.getUsername(), user);
 				}
 				
@@ -73,12 +74,12 @@ public class ConnectionManagerBean implements ConnectionManager {
 				}
 				
 				System.out.println("Registered Users:");
-				for (User user : allUsers) {
+				for (User user : data.getAllUsers().values()) {
 					System.out.println(user);
 				}
 				
 				System.out.println("LoggedIn Users:");
-				for (User user : activeUsers) {
+				for (User user : data.getActiveUsers().values()) {
 					System.out.println(user);
 				}
 			}
@@ -116,30 +117,26 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 
 	@Override
-	public void allLoggedInUsersPost(Collection<User> users) {
-		for (User user : users) {
-			this.data.getActiveUsers().put(user.getUsername(), user);
-		}
+	public void allLoggedInUsersPost(HashMap<String,User> users) {
+		this.data.setActiveUsers(users);
 	}
 	
 	@Override
-	public Collection<User> allLoggedInUsers() {
+	public HashMap<String,User> allLoggedInUsers() {
 
-		return this.data.getActiveUsers().values();
+		return this.data.getActiveUsers();
 	}
 
 	@Override
-	public void allRegisteredUsersPost(Collection<User> users) {
+	public void allRegisteredUsersPost(HashMap<String,User> users) {
 
-		for (User user : users) {
-			this.data.getAllUsers().put(user.getUsername(), user);
-		}
+		this.data.setAllUsers(users);
 	}
 	
 	@Override
-	public Collection<User> allRegisteredUsers() {
+	public HashMap<String,User> allRegisteredUsers() {
 		
-		return this.data.getAllUsers().values();
+		return this.data.getAllUsers();
 	}
 
 	@Override

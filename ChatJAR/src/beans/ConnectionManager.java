@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -36,22 +37,22 @@ public interface ConnectionManager {
 	@POST
 	@Path("/users/loggedIn")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allLoggedInUsersPost(Collection<User> users);
+	public void allLoggedInUsersPost(HashMap<String,User> users);
 	
 	@GET
 	@Path("/users/loggedIn")
 	@Produces(MediaType.APPLICATION_JSON)
-	public  Collection<User> allLoggedInUsers();
+	public HashMap<String,User> allLoggedInUsers();
 	
 	@POST
 	@Path("/users/registered")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allRegisteredUsersPost(Collection<User> users);
+	public void allRegisteredUsersPost(HashMap<String,User> users);
 	
 	@GET
 	@Path("/users/registered")
 	@Produces(MediaType.APPLICATION_JSON)
-	public  Collection<User> allRegisteredUsers();
+	public HashMap<String,User> allRegisteredUsers();
 	
 	@DELETE
 	@Path("/node/{alias}")
