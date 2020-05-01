@@ -1,5 +1,6 @@
 package beans;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -30,27 +31,27 @@ public interface ConnectionManager {
 	@POST
 	@Path("/nodes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public  List<String> allConnection();
+	public  Collection<String> allConnection();
 	
 	@POST
 	@Path("/users/loggedIn")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allLoggedInUsers(List<User> users);
+	public  void allLoggedInUsers(Collection<User> users);
 	
 	@GET
 	@Path("/users/loggedIn")
 	@Produces(MediaType.APPLICATION_JSON)
-	public  List<User> allLoggedInUsers();
+	public  Collection<User> allLoggedInUsers();
 	
 	@POST
 	@Path("/users/registered")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public  void allRegisteredUsers(List<User> users);
+	public  void allRegisteredUsers(Collection<User> users);
 	
 	@GET
 	@Path("/users/registered")
 	@Produces(MediaType.APPLICATION_JSON)
-	public  List<User> allRegisteredUsers();
+	public  Collection<User> allRegisteredUsers();
 	
 	@DELETE
 	@Path("/node/{alias}")

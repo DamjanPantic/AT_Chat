@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -55,12 +56,12 @@ public class ConnectionManagerBean implements ConnectionManager {
 				this.connections.remove(this.nodeName);
 				this.connections.add(this.master);
 				
-				List<User> activeUsers = rest.allLoggedInUsers();
+				Collection<User> activeUsers = rest.allLoggedInUsers();
 				for (User user : activeUsers) {
 					this.data.getActiveUsers().put(user.getUsername(), user);
 				}
 				
-				List<User> allUsers = rest.allRegisteredUsers();
+				Collection<User> allUsers = rest.allRegisteredUsers();
 				for (User user : allUsers) {
 					this.data.getAllUsers().put(user.getUsername(), user);
 				}
@@ -114,20 +115,20 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 
 	@Override
-	public void allLoggedInUsers(List<User> users) {
+	public void allLoggedInUsers(Collection<User> users) {
 		for (User user : users) {
 			this.data.getActiveUsers().put(user.getUsername(), user);
 		}
 	}
 	
 	@Override
-	public List<User> allLoggedInUsers() {
+	public Collection<User> allLoggedInUsers() {
 
-		return (List<User>) this.data.getActiveUsers().values();
+		return this.data.getActiveUsers().values();
 	}
 
 	@Override
-	public void allRegisteredUsers(List<User> users) {
+	public void allRegisteredUsers(Collection<User> users) {
 
 		for (User user : users) {
 			this.data.getAllUsers().put(user.getUsername(), user);
@@ -135,9 +136,9 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 	
 	@Override
-	public List<User> allRegisteredUsers() {
+	public Collection<User> allRegisteredUsers() {
 		
-		return (List<User>) this.data.getAllUsers().values();
+		return this.data.getAllUsers().values();
 	}
 
 	@Override
