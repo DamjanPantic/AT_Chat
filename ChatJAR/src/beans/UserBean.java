@@ -54,7 +54,7 @@ public class UserBean {
 
 		ResteasyClient client = new ResteasyClientBuilder().build();
 
-		for (String c : connection.getConnections()) {
+		for (String c : ConnectionManagerBean.connections) {
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.allRegisteredUsersPost(data.getAllUsers());
@@ -91,7 +91,7 @@ public class UserBean {
 		
 		ResteasyClient client = new ResteasyClientBuilder().build();
 
-		for (String c : connection.getConnections()) {
+		for (String c : ConnectionManagerBean.connections) {
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.allLoggedInUsersPost(data.getActiveUsers());

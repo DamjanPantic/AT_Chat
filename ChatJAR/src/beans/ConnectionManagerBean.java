@@ -33,12 +33,13 @@ import ws.WSEndPoint;
 @Singleton
 @Startup
 @Path("/connection")
+@Remote(ConnectionManager.class)
 public class ConnectionManagerBean implements ConnectionManager {
 	
-	private String master = null;
-	private String nodeName = "0ccaf5f9.ngrok.io";
+	private String master = "c294defe.ngrok.io";
+	private String nodeName = "a6002274.ngrok.io";
 	private String nodeAddr;
-	private List<String> connections = new ArrayList<String>();
+	public static List<String> connections = new ArrayList<String>();
 	
 	@EJB
 	private DataBean data;
@@ -49,10 +50,10 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@PostConstruct
 	private void init() {
 		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
+//			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+//			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
 //			this.nodeAddr = (String) mBeanServer.getAttribute(http, "boundAddress");
-			this.nodeName = NodeManager.getNodeName() + ":8080";
+//			this.nodeName = NodeManager.getNodeName() + ":8080";
 			
 			System.out.println("nodeAddr: " + nodeAddr + "; nodeName: " + nodeName);
 
@@ -185,30 +186,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 	public void setMaster(String master) {
 		this.master = master;
-	}
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
-
-	public String getNodeAddr() {
-		return nodeAddr;
-	}
-
-	public void setNodeAddr(String nodeAddr) {
-		this.nodeAddr = nodeAddr;
-	}
-
-	public List<String> getConnections() {
-		return connections;
-	}
-
-	public void setConnections(List<String> connections) {
-		this.connections = connections;
 	}
 	
 }

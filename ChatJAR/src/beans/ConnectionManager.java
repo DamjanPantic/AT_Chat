@@ -63,20 +63,4 @@ public interface ConnectionManager {
 	@Path("/node")
 	@Produces(MediaType.APPLICATION_JSON)
 	public  boolean contactConnection();
-	
-	public String getMaster();
-
-	public void setMaster(String master);
-
-	public String getNodeName();
-
-	public void setNodeName(String nodeName);
-
-	public String getNodeAddr();
-
-	public void setNodeAddr(String nodeAddr);
-
-	public List<String> getConnections();
-
-	public void setConnections(List<String> connections);
 }
