@@ -127,16 +127,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void allLoggedInUsersPost(HashMap<String,User> users) {
 		this.data.setActiveUsers(users);
 		
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String action = "active:";
-			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-			ws.echoTextMessage(action + jsonMessage);
-
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
+//		try {
+//			ObjectMapper mapper = new ObjectMapper();
+//			String action = "active:";
+//			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
+//			ws.echoTextMessage(action + jsonMessage);
+//
+//		} catch (JsonProcessingException e) {
+//
+//			e.printStackTrace();
+//		}
 	}
 	
 	@Override
@@ -150,16 +150,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 		this.data.setAllUsers(users);
 		
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String action = "all:";
-			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
-			ws.echoTextMessage(action + jsonMessage);
-
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-		}
+//		try {
+//			ObjectMapper mapper = new ObjectMapper();
+//			String action = "all:";
+//			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
+//			ws.echoTextMessage(action + jsonMessage);
+//
+//		} catch (JsonProcessingException e) {
+//
+//			e.printStackTrace();
+//		}
 	}
 	
 	@Override
