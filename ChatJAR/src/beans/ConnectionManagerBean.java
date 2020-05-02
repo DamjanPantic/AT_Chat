@@ -23,12 +23,15 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import model.User;
 import util.NodeManager;
+import ws.WSEndPoint;
 
 @Singleton
 @Startup
-@Remote(ConnectionManager.class)
 @Path("/connection")
 public class ConnectionManagerBean implements ConnectionManager {
 	
@@ -39,16 +42,19 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@EJB
 	private DataBean data;
+	
+	@EJB
+	WSEndPoint ws;
 
 	@PostConstruct
 	private void init() {
 		try {
-//			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-//			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
+			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
 //			this.nodeAddr = (String) mBeanServer.getAttribute(http, "boundAddress");
-//			this.nodeName = NodeManager.getNodeName() + ":8080";
-//			
-//			System.out.println("nodeAddr: " + nodeAddr + "; nodeName: " + nodeName);
+			this.nodeName = NodeManager.getNodeName() + ":8080";
+			
+			System.out.println("nodeAddr: " + nodeAddr + "; nodeName: " + nodeName);
 
 			if (master != null && !master.equals("")) {
 				ResteasyClient client = new ResteasyClientBuilder().build();
@@ -119,6 +125,17 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@Override
 	public void allLoggedInUsersPost(HashMap<String,User> users) {
 		this.data.setActiveUsers(users);
+		
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String action = "active:";
+			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
+			ws.echoTextMessage(action + jsonMessage);
+
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -131,6 +148,17 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void allRegisteredUsersPost(HashMap<String,User> users) {
 
 		this.data.setAllUsers(users);
+		
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String action = "all:";
+			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
+			ws.echoTextMessage(action + jsonMessage);
+
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -151,4 +179,36 @@ public class ConnectionManagerBean implements ConnectionManager {
 		return false;
 	}
 
+	public String getMaster() {
+		return master;
+	}
+
+	public void setMaster(String master) {
+		this.master = master;
+	}
+
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+	public String getNodeAddr() {
+		return nodeAddr;
+	}
+
+	public void setNodeAddr(String nodeAddr) {
+		this.nodeAddr = nodeAddr;
+	}
+
+	public List<String> getConnections() {
+		return connections;
+	}
+
+	public void setConnections(List<String> connections) {
+		this.connections = connections;
+	}
+	
 }

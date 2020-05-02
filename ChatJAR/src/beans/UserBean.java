@@ -15,6 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,6 +36,9 @@ public class UserBean {
 	@EJB
 	WSEndPoint ws;
 
+	@EJB
+	ConnectionManager connection;
+
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -44,13 +51,21 @@ public class UserBean {
 		}
 
 		System.out.println(user + " is regitered");
-		
+
+		ResteasyClient client = new ResteasyClientBuilder().build();
+
+		for (String c : connection.getConnections()) {
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.allRegisteredUsersPost(data.getAllUsers());
+		}
+
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
 			String action = "all:";
 			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
-			ws.echoTextMessage(action+jsonMessage);
+			ws.echoTextMessage(action + jsonMessage);
 
 		} catch (JsonProcessingException e) {
 
@@ -73,13 +88,21 @@ public class UserBean {
 		}
 
 		System.out.println(user + " is logged in");
+		
+		ResteasyClient client = new ResteasyClientBuilder().build();
+
+		for (String c : connection.getConnections()) {
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.allLoggedInUsersPost(data.getActiveUsers());
+		}
 
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
 			String action = "active:";
 			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-			ws.echoTextMessage(action+jsonMessage);
+			ws.echoTextMessage(action + jsonMessage);
 
 		} catch (JsonProcessingException e) {
 
@@ -107,7 +130,7 @@ public class UserBean {
 			ObjectMapper mapper = new ObjectMapper();
 			String action = "active:";
 			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-			ws.echoTextMessage(action+jsonMessage);
+			ws.echoTextMessage(action + jsonMessage);
 
 		} catch (JsonProcessingException e) {
 
