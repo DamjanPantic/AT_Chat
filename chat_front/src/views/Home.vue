@@ -83,9 +83,9 @@
               max-rows="4"
               class="mt-2"
             />
-            <b-row class="mt-4">
+            <b-row class="mt-4" v-if="usersType == 'active'">
               <b-col align="right" class="mr-4">
-                <b-button squared @click="sendMessageToAll">Send to All</b-button>
+                <b-button squared @click="sendMessageToAll">Send to All Active</b-button>
                 <b-button
                   pill
                   class="ml-2"

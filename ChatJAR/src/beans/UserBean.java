@@ -22,6 +22,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import model.Host;
 import model.User;
 import ws.WSEndPoint;
 
@@ -43,6 +44,9 @@ public class UserBean {
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response register(User user) {
+		Host host = new Host(ConnectionManagerBean.nodeName, ConnectionManagerBean.nodeName);
+		user.setHost(host);
+		
 		User userRegistered = data.register(user);
 
 		if (userRegistered == null) {
@@ -80,6 +84,9 @@ public class UserBean {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(User user) {
+		Host host = new Host(ConnectionManagerBean.nodeName, ConnectionManagerBean.nodeName);
+		user.setHost(host);
+		
 		User userLoggedIn = data.login(user);
 
 		if (userLoggedIn == null) {

@@ -67,6 +67,7 @@ public class User implements Agent{
 
 	@Override
 	public void handleMessage(Message message) {
+		System.out.println("Dodao poruku");
 		this.messages.add(message);
 	}
 }

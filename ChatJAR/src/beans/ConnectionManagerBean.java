@@ -37,6 +37,7 @@ import ws.WSEndPoint;
 @Startup
 @Path("/connection")
 @Remote(ConnectionManager.class)
+@AccessTimeout(value = 60, unit = TimeUnit.SECONDS)
 public class ConnectionManagerBean implements ConnectionManager {
 
 	public static String master = null;
@@ -106,7 +107,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("Node is destroyed");
 	}
 
-	@AccessTimeout(value = 60, unit = TimeUnit.SECONDS)
 	@Schedule(hour = "*", minute = "*", second = "*/30", info = "heartbeat")
 	public void heartBeat() {
 		System.out.println("heartbeat");
@@ -117,11 +117,21 @@ public class ConnectionManagerBean implements ConnectionManager {
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 
-			boolean node = rest.contactConnection();
+			boolean node = false;
+			
+			try {
+				node = rest.contactConnection();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 
 			if (!node) {
 				System.out.println("heartbeat second try");
-				node = rest.contactConnection();
+				try {
+					node = rest.contactConnection();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 				if (!node) {
 					connections.remove(c);
 					for (String connection : connections) {
