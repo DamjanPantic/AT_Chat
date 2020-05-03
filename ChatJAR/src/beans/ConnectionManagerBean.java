@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Schedule;
@@ -105,6 +106,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("Node is destroyed");
 	}
 
+	@AccessTimeout(value = 60, unit = TimeUnit.SECONDS)
 	@Schedule(hour = "*", minute = "*", second = "*/30", info = "heartbeat")
 	public void heartBeat() {
 		System.out.println("heartbeat");
@@ -124,6 +126,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 					connections.remove(c);
 					for (String connection : connections) {
 						rtarget = client.target("http://" + connection + "/ChatWAR/connection");
+						rest = rtarget.proxy(ConnectionManager.class);
+						
 						rest.removeConnection(c);
 					}
 					System.out.println("Node removed");
@@ -214,7 +218,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void removeConnection(String alias) {
 		connections.remove(alias);
 		
-		System.out.println("Connections after remove" + alias + ": ");
+		System.out.println("Connections after remove " + alias + ": ");
 		for (String c : connections) {
 			System.out.println(c);
 		}
