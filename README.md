@@ -44,3 +44,17 @@ It can be built via UI using Eclipse IDE:
 API should be available at http://localhost:8080/ChatWAR/
 
 All the implemented functionalities would be now available via frontend.
+
+#### Server-Server communication
+
+To make this  possible  please change variabbles in this file `ConnectionManagerBean`
+
+For master node:
+-Set `master` variable to null
+-Set `nodeName` variable to string with ip address concatenate with ":8080" or URL provided by ngrok
+
+For non-master node:
+-Set `master` variable to master nods ip address concatenate with ":8080" or URL provided by ngrok
+-Set `nodeName` variable to string with ip address concatenate with ":8080" or URL provided by ngrok
+
+These variable have to be set without `http://`.
