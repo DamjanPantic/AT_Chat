@@ -52,11 +52,13 @@ To make this  possible  please change variabbles in this file `ConnectionManager
 For master node:
 
 -Set `master` variable to null
+
 -Set `nodeName` variable to string with ip address concatenate with ":8080" or URL provided by ngrok
 
 For non-master node:
 
 -Set `master` variable to master nods ip address concatenate with ":8080" or URL provided by ngrok
+
 -Set `nodeName` variable to string with ip address concatenate with ":8080" or URL provided by ngrok
 
 These variable have to be set without `http://`.
