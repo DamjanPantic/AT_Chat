@@ -53,13 +53,6 @@ public class QueueMDB implements MessageListener {
 							.equals(ConnectionManagerBean.nodeName)) {
 						System.out.println("Polsato svima isti Host");
 						user.handleMessage(message);
-					} else {
-						String path = "http://" + data.getActiveUsers().get(user.getUsername()).getHost().getAddress()
-								+ "/ChatWAR/messages/user";
-						ResteasyWebTarget rtarget = client.target(path);
-						Response response = rtarget.request(MediaType.APPLICATION_JSON)
-								.post(Entity.entity(message, MediaType.APPLICATION_JSON));
-						System.out.println("Polsato svima razliciti Host");
 					}
 				}
 			} else {
