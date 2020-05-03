@@ -48,12 +48,14 @@ public class QueueMDB implements MessageListener {
 			ResteasyClient client = new ResteasyClientBuilder().build();
 
 			if (message.getReciver() == null) {
-				for (User user : data.getActiveUsers().values()) {
-					if (user.getHost().getAddress().equals(ConnectionManagerBean.nodeName)) {
+				for (User user : data.getAllUsers().values()) {
+					if (data.getActiveUsers().get(user.getUsername()).getHost().getAddress()
+							.equals(ConnectionManagerBean.nodeName)) {
 						System.out.println("Polsato svima isti Host");
 						user.handleMessage(message);
 					} else {
-						String path = "http://" + user.getHost().getAddress() + "/ChatWAR/messages/user";
+						String path = "http://" + data.getActiveUsers().get(user.getUsername()).getHost().getAddress()
+								+ "/ChatWAR/messages/user";
 						ResteasyWebTarget rtarget = client.target(path);
 						Response response = rtarget.request(MediaType.APPLICATION_JSON)
 								.post(Entity.entity(message, MediaType.APPLICATION_JSON));
@@ -61,8 +63,9 @@ public class QueueMDB implements MessageListener {
 					}
 				}
 			} else {
-				for (User user : data.getActiveUsers().values()) {
-					if (user.getUsername().equals(message.getSender().getUsername())) {
+				for (User user : data.getAllUsers().values()) {
+					if (data.getActiveUsers().get(user.getUsername()).getUsername()
+							.equals(message.getSender().getUsername())) {
 						System.out.println("Polsato Senderu");
 						user.handleMessage(message);
 					} else if (user.getUsername().equals(message.getReciver().getUsername())) {
@@ -70,7 +73,9 @@ public class QueueMDB implements MessageListener {
 							System.out.println("Polsato Reciveru na isti Host");
 							user.handleMessage(message);
 						} else {
-							String path = "http://" + user.getHost().getAddress() + "/ChatWAR/messages/user";
+							String path = "http://"
+									+ data.getActiveUsers().get(user.getUsername()).getHost().getAddress()
+									+ "/ChatWAR/messages/user";
 							ResteasyWebTarget rtarget = client.target(path);
 							Response response = rtarget.request(MediaType.APPLICATION_JSON)
 									.post(Entity.entity(message, MediaType.APPLICATION_JSON));
