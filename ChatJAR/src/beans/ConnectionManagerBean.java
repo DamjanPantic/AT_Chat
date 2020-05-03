@@ -41,7 +41,7 @@ import ws.WSEndPoint;
 public class ConnectionManagerBean implements ConnectionManager {
 
 	public static String master = null;
-	public static String nodeName = "ebf99bc3.ngrok.io";
+	public static String nodeName = null;
 //	public static String nodeAddr;
 	public static List<String> connections = new ArrayList<String>();
 
