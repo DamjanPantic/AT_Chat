@@ -101,6 +101,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.removeConnection(nodeName);
 		}
+		
+		System.out.println("Node is destroyed");
 	}
 
 	@Schedule(hour = "*", minute = "*", second = "*/30", info = "heartbeat")
@@ -116,6 +118,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			boolean node = rest.contactConnection();
 
 			if (!node) {
+				System.out.println("heartbeat second try");
 				node = rest.contactConnection();
 				if (!node) {
 					connections.remove(c);
@@ -123,9 +126,15 @@ public class ConnectionManagerBean implements ConnectionManager {
 						rtarget = client.target("http://" + connection + "/WAR2020/rest/server");
 						rest.removeConnection(c);
 					}
+					System.out.println("Node removed");
 				}
 			}
 
+		}
+		
+		System.out.println("Connections: ");
+		for (String c : connections) {
+			System.out.println(c);
 		}
 	}
 
@@ -204,11 +213,17 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@Override
 	public void removeConnection(String alias) {
 		connections.remove(alias);
+		
+		System.out.println("Connections after remove" + alias + ": ");
+		for (String c : connections) {
+			System.out.println(c);
+		}
 	}
 
 	@Override
 	public boolean contactConnection() {
 
+		System.out.println("Ping");
 		return true;
 	}
 
