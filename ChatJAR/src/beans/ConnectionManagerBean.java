@@ -39,7 +39,7 @@ import ws.WSEndPoint;
 public class ConnectionManagerBean implements ConnectionManager {
 
 	public static String master = null;
-	public static String nodeName = "6e1c441d.ngrok.io";
+	public static String nodeName = "ebf99bc3.ngrok.io";
 //	public static String nodeAddr;
 	public static List<String> connections = new ArrayList<String>();
 
@@ -97,7 +97,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 		
 		for (String connection : connections) {
-			ResteasyWebTarget rtarget = client.target("http://" + connection + "/WAR2020/rest/server");
+			ResteasyWebTarget rtarget = client.target("http://" + connection + "/ChatWAR/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.removeConnection(nodeName);
 		}
@@ -112,7 +112,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 
 		for (String c : connections) {
-			ResteasyWebTarget rtarget = client.target("http://" + c + "/WAR2020/rest/server");
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 
 			boolean node = rest.contactConnection();
@@ -123,7 +123,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 				if (!node) {
 					connections.remove(c);
 					for (String connection : connections) {
-						rtarget = client.target("http://" + connection + "/WAR2020/rest/server");
+						rtarget = client.target("http://" + connection + "/ChatWAR/connection");
 						rest.removeConnection(c);
 					}
 					System.out.println("Node removed");
