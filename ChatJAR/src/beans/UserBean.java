@@ -52,13 +52,13 @@ public class UserBean {
 
 		System.out.println(user + " is regitered");
 
-//		ResteasyClient client = new ResteasyClientBuilder().build();
-//
-//		for (String c : ConnectionManagerBean.connections) {
-//			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
-//			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
-//			rest.allRegisteredUsersPost(data.getAllUsers());
-//		}
+		ResteasyClient client = new ResteasyClientBuilder().build();
+
+		for (String c : ConnectionManagerBean.connections) {
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.allRegisteredUsersPost(data.getAllUsers());
+		}
 
 		try {
 
@@ -89,13 +89,13 @@ public class UserBean {
 
 		System.out.println(user + " is logged in");
 		
-//		ResteasyClient client = new ResteasyClientBuilder().build();
-//
-//		for (String c : ConnectionManagerBean.connections) {
-//			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
-//			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
-//			rest.allLoggedInUsersPost(data.getActiveUsers());
-//		}
+		ResteasyClient client = new ResteasyClientBuilder().build();
+
+		for (String c : ConnectionManagerBean.connections) {
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.allLoggedInUsersPost(data.getActiveUsers());
+		}
 
 		try {
 

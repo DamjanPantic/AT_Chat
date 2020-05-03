@@ -36,8 +36,8 @@ import ws.WSEndPoint;
 @Remote(ConnectionManager.class)
 public class ConnectionManagerBean implements ConnectionManager {
 	
-	private String master = "c294defe.ngrok.io";
-	private String nodeName = "a6002274.ngrok.io";
+	private String master = "d5d5620d.ngrok.io";
+	private String nodeName = "6e1c441d.ngrok.io";
 	private String nodeAddr;
 	public static List<String> connections = new ArrayList<String>();
 	
@@ -61,19 +61,19 @@ public class ConnectionManagerBean implements ConnectionManager {
 				ResteasyClient client = new ResteasyClientBuilder().build();
 				ResteasyWebTarget rtarget = client.target("http://" + master + "/ChatWAR/connection");
 				ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
-				this.connections = rest.newConnection(this.nodeName);
-				this.connections.remove(this.nodeName);
-				this.connections.add(this.master);
+				connections = rest.newConnection(this.nodeName);
+				connections.remove(this.nodeName);
+				connections.add(this.master);
 				
 				data.setActiveUsers(rest.allLoggedInUsers());
-				for (User user : data.getActiveUsers().values()) {
-					this.data.getActiveUsers().put(user.getUsername(), user);
-				}
+//				for (User user : data.getActiveUsers().values()) {
+//					this.data.getActiveUsers().put(user.getUsername(), user);
+//				}
 				
 				data.setAllUsers(rest.allRegisteredUsers());
-				for (User user : data.getAllUsers().values()) {
-					this.data.getAllUsers().put(user.getUsername(), user);
-				}
+//				for (User user : data.getAllUsers().values()) {
+//					this.data.getAllUsers().put(user.getUsername(), user);
+//				}
 				
 				System.out.println("Connections:");
 				for (String string : connections) {
@@ -127,16 +127,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void allLoggedInUsersPost(HashMap<String,User> users) {
 		this.data.setActiveUsers(users);
 		
-//		try {
-//			ObjectMapper mapper = new ObjectMapper();
-//			String action = "active:";
-//			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
-//			ws.echoTextMessage(action + jsonMessage);
-//
-//		} catch (JsonProcessingException e) {
-//
-//			e.printStackTrace();
-//		}
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String action = "active:";
+			String jsonMessage = mapper.writeValueAsString(data.getActiveUsers().values());
+			ws.echoTextMessage(action + jsonMessage);
+
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -150,16 +150,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 		this.data.setAllUsers(users);
 		
-//		try {
-//			ObjectMapper mapper = new ObjectMapper();
-//			String action = "all:";
-//			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
-//			ws.echoTextMessage(action + jsonMessage);
-//
-//		} catch (JsonProcessingException e) {
-//
-//			e.printStackTrace();
-//		}
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String action = "all:";
+			String jsonMessage = mapper.writeValueAsString(data.getAllUsers().values());
+			ws.echoTextMessage(action + jsonMessage);
+
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
