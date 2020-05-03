@@ -70,10 +70,6 @@ public class MessageBean {
 			ex.printStackTrace();
 		}
 		
-//		for (User user: data.getAllUsers().values()) {
-//			user.getMessages().add(message);
-//		}
-		
 		System.out.println(message + " is snet [ALL]");
 		
 		return Response.status(Response.Status.OK).build();
@@ -109,11 +105,6 @@ public class MessageBean {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-//		if (!sender.getUsername().equals(reciver.getUsername())) {
-//			data.getAllUsers().get(message.getSender().getUsername()).getMessages().add(message);
-//		}
-//		data.getAllUsers().get(message.getReciver().getUsername()).getMessages().add(message);
 		
 		System.out.println(message + " is snet");
 		

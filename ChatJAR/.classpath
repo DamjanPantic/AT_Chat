@@ -13,7 +13,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/ChatWAR"/>
-	<classpathentry kind="lib" path="/Users/damjanpantic/Downloads/jackson-core-2.11.0.jar"/>
-	<classpathentry kind="lib" path="/Users/damjanpantic/Downloads/jackson-databind-2.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.11.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

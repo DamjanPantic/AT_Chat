@@ -124,6 +124,14 @@ public class UserBean {
 		}
 
 		System.out.println("User[username: " + username + "] is logged out");
+		
+		ResteasyClient client = new ResteasyClientBuilder().build();
+
+		for (String c : ConnectionManagerBean.connections) {
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/ChatWAR/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.allLoggedInUsersPost(data.getActiveUsers());
+		}
 
 		try {
 
